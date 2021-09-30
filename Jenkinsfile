@@ -1,27 +1,16 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'node:6-alpine'
+      args '-p 3000:3000'
+    }
+
+  }
   stages {
-    stage('Git Repo Code') {
+    stage('Build') {
       steps {
-        git(url: 'https://github.com/nateprice18f/TechTalkCIDemo.git', branch: 'main', changelog: true)
-      }
-    }
-
-    stage('test') {
-      steps {
-        echo 'test'
-      }
-    }
-
-    stage('Release') {
-      steps {
-        echo 'release'
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        pushToCloudFoundry(target: 'https://api.fr.cloud.gov', organization: 'sandbox-gsa', cloudSpace: 'nate.price', credentialsId: 'nate.price@gsa.gov')
+        echo 'At this stage we "Build" a docker image'
+        sh 'npm install'
       }
     }
 
